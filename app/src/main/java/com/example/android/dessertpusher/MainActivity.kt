@@ -27,7 +27,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
-
+const val KEY_REVENUE = "key_revenue"
+const val  KEY_AMOUNT = "key_amount"
+const val  KEY_TIME = "key_time"
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -81,8 +83,13 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // TODO (03) Check here if the Bundle savedInstanceState is null. If it isn't, get the
         // three values you saved and restore them: revenue, desserts sold and the timer's
         // seconds count. Also make sure to show the correct image resource.
-
+        if (savedInstanceState != null) {
+            revenue = savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold = savedInstanceState.getInt(KEY_AMOUNT)
+            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIME)
+        }
         // Set the TextViews to the right values
+
         binding.revenue = revenue
         binding.amountSold = dessertsSold
 
@@ -162,9 +169,19 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     // dessertTimer.secondsCount in the state Bundle
 
     /** Lifecycle Methods **/
+
     override fun onStart() {
         super.onStart()
         Timber.i("onStart Called")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_AMOUNT, dessertsSold)
+        outState.putInt(KEY_TIME, dessertTimer.secondsCount)
+
+        Timber.i("onSavedInstance Called")
     }
 
     override fun onResume() {
